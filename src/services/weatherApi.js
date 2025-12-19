@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { reverseGeocode, getPlaceHierarchy, getCountryCodeFromCoordinates } from './geolocation'
 
-const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY
+const API_KEY =  process.env.REACT_APP_API_KEY;
 const BASE = 'https://api.openweathermap.org/data/2.5'
 
 if (!API_KEY) {
