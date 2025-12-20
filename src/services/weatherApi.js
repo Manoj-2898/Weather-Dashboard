@@ -1,28 +1,21 @@
 import axios from 'axios'
-import { reverseGeocode, getPlaceHierarchy, getCountryCodeFromCoordinates } from './geolocation'
 
-const API_KEY =  process.env.REACT_APP_WEATHER_API_KEY
-;
+const API_KEY = import.meta.env.VITE_WEATHER_API_KEY
 const BASE = 'https://api.openweathermap.org/data/2.5'
 
+// ❌ DO NOT crash the app in production
 if (!API_KEY) {
-  throw new Error('❌ OpenWeather API key missing in .env file')
-}
-
-function toCelsius(k) {
-  return Math.round(k - 273.15)
+  console.error('OpenWeather API key missing');
+  throw new Error('❌ OpenWeather API key missing in .env file');
 }
 
 export async function fetchWeatherByCity(city) {
-  const res = await axios.get(
-    'https://api.openweathermap.org/data/2.5/weather',
-    {
-      params: {
-        q: city,
-        appid: import.meta.env.VITE_OPENWEATHER_API_KEY
-      }
+  const res = await axios.get(`${BASE}/weather`, {
+    params: {
+      q: city,
+      appid: API_KEY
     }
-  )
+  })
 
   if (!res.data || !res.data.coord) {
     throw new Error('City not found')
@@ -32,20 +25,14 @@ export async function fetchWeatherByCity(city) {
   return fetchWeatherByCoords(lat, lon)
 }
 
-
 export async function fetchWeatherByCoords(lat, lon) {
-  const res = await axios.get(
-    'https://api.openweathermap.org/data/2.5/forecast',
-    {
-      params: {
-        lat,
-        lon,
-        appid: import.meta.env.VITE_OPENWEATHER_API_KEY
-      }
+  const res = await axios.get(`${BASE}/forecast`, {
+    params: {
+      lat,
+      lon,
+      appid: API_KEY
     }
-  )
-
-  console.log('FORECAST API OK')
+  })
 
   const list = res.data.list
 
@@ -70,4 +57,3 @@ export async function fetchWeatherByCoords(lat, lon) {
     daily: []
   }
 }
-
